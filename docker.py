@@ -88,3 +88,20 @@ def getContainerDetails(containerId):
   output = json.loads(output)[0]
   
   return output
+
+# Get an image digest
+def getImageDigest(image):
+  # Get the image details
+  output = run(['docker', 'inspect', image])
+  
+  # Join the output into a single string
+  output = ''.join(output)
+
+  # Convert the output to a JSON object
+  output = json.loads(output)[0]
+
+  # Get the digest
+  digest = output['RepoDigests'][0]
+  digest = digest.split('@')[1]
+
+  return digest
