@@ -2,6 +2,7 @@ from authentication import login
 import os
 from dotenv import load_dotenv
 from docker import getContainers, getRepositories
+from hub import getRepositoryImages
 load_dotenv()
 
 def authenticate():
@@ -18,6 +19,12 @@ def authenticate():
 if authenticate() == False: exit()
 
 # Get all containers and their repositories
-containers = getContainers()
-respositories = getRepositories(containers)
-print(respositories)
+CONTAINERS = getContainers()
+REPOSITORIES = getRepositories(CONTAINERS)
+
+# Go through each repository and get the latest image
+REPO_NAMES = [*REPOSITORIES.keys()]
+for repo in REPO_NAMES:
+  print('Getting images for repository: ' + repo)
+  images = getRepositoryImages(repo)
+  print(images)
