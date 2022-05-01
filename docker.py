@@ -1,3 +1,4 @@
+import json
 from terminal import run
 
 # Get all current containers
@@ -41,6 +42,7 @@ def getContainers():
     status = line[STATUS_INDEX:STATUS_INDEX + STATUS_LENGTH].strip()
     ports = line[PORTS_INDEX:PORTS_INDEX + PORTS_LENGTH].strip()
     names = line[NAMES_INDEX:NAMES_INDEX + NAMES_LENGTH].strip()
+    inspect = getContainerDetails(containerId)
 
     # Add the container to the list
     containers.append({
@@ -50,7 +52,8 @@ def getContainers():
       'created': created,
       'status': status,
       'ports': ports,
-      'names': names
+      'names': names,
+      'inspect': inspect
     })
   
   return containers
@@ -72,3 +75,16 @@ def getRepositories(containers):
     repositories[repository].append(container['containerId'])
 
   return repositories
+
+# Get container details
+def getContainerDetails(containerId):
+  # Get the container details
+  output = run(['docker', 'inspect', containerId])
+  
+  # Join the output into a single string
+  output = ''.join(output)
+
+  # Convert the output to a JSON object
+  output = json.loads(output)[0]
+  
+  return output
