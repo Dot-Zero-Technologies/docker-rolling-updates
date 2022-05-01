@@ -2,7 +2,7 @@ import time
 from authentication import login
 import os
 from dotenv import load_dotenv
-from docker import getContainers, getImageDigest, getRepositories, pullImage, startContainer, stopContainer
+from docker import getContainers, getImageDigest, getRepositories, pullImage, recreateContainers, removeContainer, startContainer, stopContainer
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
@@ -65,15 +65,24 @@ while True:
         print('Failed to pull image for ' + container['names'])
         continue
 
-      # Restart the container
-      print('Restarting ' + container['names'])
+      # Stop the container
+      print('Stopping ' + container['names'] + '...')
       if stopContainer(container['containerId']) != True:
         print('Failed to stop ' + container['names'])
         continue
-      if startContainer(container['containerId']) != True:
-        print('Failed to start ' + container['names'])
+      
+      # Remove the container
+      print('Removing ' + container['names'] + '...')
+      if removeContainer(container['containerId']) != True:
+        print('Failed to remove ' + container['names'])
         continue
-      print('Restarted ' + container['names'])
+
+      # Recreate the container
+      print('Recreating ' + container['names'] + '...')
+      DOCKER_COMPOSE_PATH = container['inspect']['Config']['Labels']['com.docker.compose.project.working_dir']
+      if recreateContainers(DOCKER_COMPOSE_PATH) != True:
+        print('Failed to recreate ' + container['names'])
+        continue
   
   # Wait for a bit before checking again
   time.sleep(int(os.getenv('SLEEP_TIME')))

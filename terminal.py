@@ -1,10 +1,10 @@
 import subprocess
 
 # Run a command in the terminal and return the output
-def run(cmd):
+def run(cmd, cwd=None):
   try:
     # Run the command
-    output = subprocess.check_output(cmd)
+    output = subprocess.check_output(cmd, cwd=cwd)
     output = output.decode('utf-8').split('\n')
 
     # Remove the last empty line

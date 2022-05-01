@@ -141,3 +141,22 @@ def startContainer(containerId):
     return True
   else:
     return False
+
+# Try to remove a container
+def removeContainer(containerId):
+  # Remove the container
+  output = run(['docker', 'rm', containerId])
+  output = ''.join(output)
+
+  # Check if the container was removed
+  if output == containerId:
+    return True
+  else:
+    return False
+
+# Try to recreate a stopped compose containers
+def recreateContainers(composePath):
+  # Run docker compose up
+  run(['docker', 'compose', 'up', '-d', '--no-recreate'], composePath)
+
+  return True
