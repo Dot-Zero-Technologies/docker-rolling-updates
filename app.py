@@ -2,7 +2,7 @@ from authentication import login
 import os
 from dotenv import load_dotenv
 from docker import getContainers, getRepositories
-from hub import getRepositoryImages
+from hub import getRepositoryImagesByTag
 load_dotenv()
 
 def authenticate():
@@ -24,7 +24,8 @@ REPOSITORIES = getRepositories(CONTAINERS)
 
 # Go through each repository and get the latest image
 REPO_NAMES = [*REPOSITORIES.keys()]
+REPO_IMAGES = {}
 for repo in REPO_NAMES:
-  print('Getting images for repository: ' + repo)
-  images = getRepositoryImages(repo)
-  print(images)
+  # Get the latest image for each tag
+  REPO_IMAGES[repo] = getRepositoryImagesByTag(repo)
+  print('Found ' + str(len(REPO_IMAGES[repo])) + ' images for ' + repo)
