@@ -1,6 +1,7 @@
 from authentication import login
 import os
 from dotenv import load_dotenv
+from docker import getContainers, getRepositories
 load_dotenv()
 
 def authenticate():
@@ -15,3 +16,8 @@ def authenticate():
 
 # Start by authenticating with Docker Hub
 if authenticate() == False: exit()
+
+# Get all containers and their repositories
+containers = getContainers()
+respositories = getRepositories(containers)
+print(respositories)

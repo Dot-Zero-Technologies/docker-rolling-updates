@@ -1,6 +1,6 @@
-from requests import head
 from terminal import run
 
+# Get all current containers
 def getContainers():
   # Get the list of running containers
   output = run(['docker', 'ps', '-a', '--no-trunc'])
@@ -54,3 +54,21 @@ def getContainers():
     })
   
   return containers
+
+# Get container repositories
+def getRepositories(containers):
+  repositories = {}
+  for container in containers:
+    # Get the image name
+    image = container['image']
+
+    # Get the repository name
+    repository = image.split(':')
+    repository = repository[0]
+
+    # Add the repository to the list
+    if repository not in repositories:
+      repositories[repository] = []
+    repositories[repository].append(container['containerId'])
+
+  return repositories
