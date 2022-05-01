@@ -117,3 +117,27 @@ def pullImage(image):
     return True
   else:
     return False
+
+# Try to stop a container
+def stopContainer(containerId):
+  # Stop the container
+  output = run(['docker', 'stop', containerId])
+  output = ''.join(output)
+
+  # Check if the container was stopped
+  if output == containerId:
+    return True
+  else:
+    return False
+
+# Try to start a container
+def startContainer(containerId):
+  # Start the container
+  output = run(['docker', 'start', containerId])
+  output = ''.join(output)
+
+  # Check if the container was started
+  if output == containerId:
+    return True
+  else:
+    return False

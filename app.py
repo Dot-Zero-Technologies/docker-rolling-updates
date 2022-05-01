@@ -1,7 +1,7 @@
 from authentication import login
 import os
 from dotenv import load_dotenv
-from docker import getContainers, getImageDigest, getRepositories, pullImage
+from docker import getContainers, getImageDigest, getRepositories, pullImage, startContainer, stopContainer
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
@@ -60,4 +60,13 @@ for container in CONTAINERS:
     # Pull the latest image
     if pullImage(CONTAINER_NAMESPACE + '/' + CONTAINER_REPOSITORY + ':' + CONTAINER_TAG) != True:
       print('Failed to pull image for ' + container['names'])
+      continue
+
+    # Restart the container
+    print('Restarting ' + container['names'])
+    if stopContainer(container['containerId']) != True:
+      print('Failed to stop ' + container['names'])
+      continue
+    if startContainer(container['containerId']) != True:
+      print('Failed to start ' + container['names'])
       continue
