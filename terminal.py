@@ -16,3 +16,5 @@ def run(cmd):
   except subprocess.CalledProcessError as e:
     print(e.output)
     return []
+  except:
+    return []
