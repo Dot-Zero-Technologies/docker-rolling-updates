@@ -1,7 +1,7 @@
 from authentication import login
 import os
 from dotenv import load_dotenv
-from docker import getContainers, getImageDigest, getRepositories
+from docker import getContainers, getImageDigest, getRepositories, pullImage
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
@@ -53,8 +53,11 @@ for container in CONTAINERS:
   # Check if the container image matches the latest image
   IS_UP_TO_DATE = CONTAINER_IMAGE_DIGEST == REPOSITORY_IMAGE_DIGEST
 
-  # Print update status
-  if IS_UP_TO_DATE:
-    print(container['names'] + ' is up to date!')
-  else:
+  # Check if the container requires updating
+  if IS_UP_TO_DATE == False:
     print(container['names'] + ' is out of date!')
+
+    # Pull the latest image
+    if pullImage(CONTAINER_NAMESPACE + '/' + CONTAINER_REPOSITORY + ':' + CONTAINER_TAG) != True:
+      print('Failed to pull image for ' + container['names'])
+      continue

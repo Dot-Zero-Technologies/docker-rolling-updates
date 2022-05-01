@@ -63,7 +63,7 @@ def getRepositories(containers):
   repositories = {}
   for container in containers:
     # Get the image name
-    image = container['image']
+    image = container['inspect']['Config']['Image']
 
     # Get the repository name
     repository = image.split(':')
@@ -105,3 +105,15 @@ def getImageDigest(image):
   digest = digest.split('@')[1]
 
   return digest
+
+# Pull an image
+def pullImage(image):
+  # Get the image details
+  output = run(['docker', 'pull', image])
+  output = ''.join(output)
+
+  # Check if the image was pulled
+  if 'Pull complete' in output or 'Image is up to date' in output:
+    return True
+  else:
+    return False
