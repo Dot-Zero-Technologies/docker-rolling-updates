@@ -3,6 +3,7 @@ from authentication import login
 import os
 from dotenv import load_dotenv
 from docker import getContainers, getImageDigest, getRepositories, pullImage, recreateContainers, removeContainer, startContainer, stopContainer
+from filter import loadFilters
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
@@ -15,6 +16,9 @@ def authenticate():
   else: print('Authentication failed')
 
   return success
+
+# Load filters
+loadFilters(os.getenv('FILTER_TYPE'), os.getenv('FILTER'))
 
 # Start by authenticating with Docker Hub
 if authenticate() == False: exit()
