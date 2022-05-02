@@ -175,3 +175,10 @@ def recreateContainers(composePath):
   run(['docker', 'compose', 'up', '-d', '--no-recreate'], composePath)
 
   return True
+
+# Prune images
+def pruneImages():
+  # Run docker images prune
+  run(['docker', 'images', 'prune', '-af'])
+
+  return True

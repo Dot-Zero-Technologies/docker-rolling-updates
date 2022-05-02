@@ -3,7 +3,7 @@ from authentication import login
 import os
 from dotenv import load_dotenv
 from debug import enableDebugMode, printDebugMessage
-from docker import getContainers, getImageDigest, getRepositories, pullImage, recreateContainers, removeContainer, startContainer, stopContainer
+from docker import getContainers, getImageDigest, getRepositories, pruneImages, pullImage, recreateContainers, removeContainer, startContainer, stopContainer
 from filter import isValidRepository, loadFilters, repoIsAllowed, splitRepository
 from hub import getRepositoryImagesByTag
 load_dotenv()
@@ -45,6 +45,9 @@ while True:
       # Get the latest image for each tag
       REPO_IMAGES[repo] = getRepositoryImagesByTag(repo)
     printDebugMessage('Repository images: ' + str(REPO_IMAGES))
+
+    # Variable to check if any updates were made
+    UPDATES_MADE = False
 
     # Check all container images and see if they match the latest image
     printDebugMessage('Checking container versions')
@@ -122,6 +125,15 @@ while True:
           print('Failed to recreate ' + container['names'])
           continue
         else: printDebugMessage('  Recreated ' + container['names'])
+
+        # Set UPDATES_MADE to true
+        UPDATES_MADE = True
+    
+    # Prune unused images if any updates were made
+    if UPDATES_MADE:
+      print('Pruning unused images...')
+      if pruneImages() == True:
+        printDebugMessage('  Pruned unused images')
     
     # Wait for a bit before checking again
     printDebugMessage('Sleeping for ' + os.getenv('SLEEP_TIME') + ' seconds')
