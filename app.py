@@ -3,7 +3,7 @@ from authentication import login
 import os
 from dotenv import load_dotenv
 from docker import getContainers, getImageDigest, getRepositories, pullImage, recreateContainers, removeContainer, startContainer, stopContainer
-from filter import loadFilters
+from filter import isValidRepository, loadFilters, repoIsAllowed, splitRepository
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
@@ -46,6 +46,17 @@ while True:
 
     # Get the container image repository
     containerImageRepo = container['inspect']['Config']['Image']
+
+    # Check if the repo is valid
+    if not isValidRepository(containerImageRepo):
+      print('Invalid repository: ' + containerImageRepo)
+      continue
+
+    # Split the container image repository into its components
+    NAMESPACE, REPOSITORY, TAG = splitRepository(containerImageRepo)
+
+    # Check if the container image should be skipped
+    if not repoIsAllowed(NAMESPACE, REPOSITORY, TAG): continue
 
     # Get the image digest
     CONTAINER_IMAGE_DIGEST = getImageDigest(container['inspect']['Image'])
