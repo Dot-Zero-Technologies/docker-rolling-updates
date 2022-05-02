@@ -1,9 +1,11 @@
 import json
+from debug import printDebugMessage
 from terminal import run
 
 # Get all current containers
 def getContainers():
   # Get the list of running containers
+  printDebugMessage('Getting running containers')
   output = run(['docker', 'ps', '-a', '--no-trunc'])
   header = output.pop(0)
 
@@ -44,6 +46,16 @@ def getContainers():
     names = line[NAMES_INDEX:NAMES_INDEX + NAMES_LENGTH].strip()
     inspect = getContainerDetails(containerId)
 
+    # Print debug information
+    printDebugMessage('  --------------------------------------------------')
+    printDebugMessage('  Container ID: ' + containerId)
+    printDebugMessage('  Image: ' + image)
+    printDebugMessage('  Command: ' + command)
+    printDebugMessage('  Created: ' + created)
+    printDebugMessage('  Status: ' + status)
+    printDebugMessage('  Ports: ' + ports)
+    printDebugMessage('  Names: ' + names)
+
     # Add the container to the list
     containers.append({
       'containerId': containerId,
@@ -56,14 +68,17 @@ def getContainers():
       'inspect': inspect
     })
   
+  printDebugMessage('Found ' + str(len(containers)) + ' containers')
   return containers
 
 # Get container repositories
 def getRepositories(containers):
+  printDebugMessage('Getting repositories for containers')
   repositories = {}
   for container in containers:
     # Get the image name
     image = container['inspect']['Config']['Image']
+    printDebugMessage(container['names'] + ': ' + image)
 
     # Get the repository name
     repository = image.split(':')
