@@ -126,12 +126,10 @@ while True:
     # Wait for a bit before checking again
     printDebugMessage('Sleeping for ' + os.getenv('SLEEP_TIME') + ' seconds')
     time.sleep(int(os.getenv('SLEEP_TIME')))
-  except KeyboardInterrupt:
-    print('Exiting...')
-    break
-  except:
+  except Exception as error:
     # Print error message
     print('An error occurred during the application loop')
+    printDebugMessage(error)
     print('Reauthenticating with Docker Hub...')
     
     # Try to authenticate again
