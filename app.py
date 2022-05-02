@@ -19,6 +19,9 @@ def authenticate():
 # Start by authenticating with Docker Hub
 if authenticate() == False: exit()
 
+# Print welcome message
+print('Welcome to Docker Rolling Updates')
+
 # Start application loop
 while True:
   # Get all containers and their repositories
@@ -31,7 +34,6 @@ while True:
   for repo in REPO_NAMES:
     # Get the latest image for each tag
     REPO_IMAGES[repo] = getRepositoryImagesByTag(repo)
-    print('Found ' + str(len(REPO_IMAGES[repo])) + ' images for ' + repo)
 
   # Check all container images and see if they match the latest image
   for container in CONTAINERS:
