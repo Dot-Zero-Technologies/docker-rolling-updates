@@ -7,6 +7,13 @@ from filter import isValidRepository, loadFilters, repoIsAllowed, splitRepositor
 from hub import getRepositoryImagesByTag
 load_dotenv()
 
+# Check if debug mode is enabled
+DEBUG_MODE = False
+if os.getenv("DEBUG") == "TRUE":
+  DEBUG_MODE = True
+  print("Debug mode enabled")
+
+# Authenticate with Docker Hub
 def authenticate():
   # Authenticate with Docker Hub
   success = login(os.getenv('DOCKER_USERNAME'), os.getenv('DOCKER_PASSWORD'))
