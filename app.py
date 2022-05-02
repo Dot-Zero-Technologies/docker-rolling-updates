@@ -49,7 +49,7 @@ while True:
     # Check all container images and see if they match the latest image
     printDebugMessage('Checking container versions')
     for container in CONTAINERS:
-      printDebugMessage('Checking container: ' + container['NAME'])
+      printDebugMessage('Checking container: ' + container['names'])
 
       # Only check running containers
       if container['inspect']['State']['Running'] != True:
