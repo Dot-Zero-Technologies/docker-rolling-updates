@@ -23,6 +23,9 @@ with open('/etc/systemd/system/docker-rolling-updates.service', 'w') as f:
   f.write('WantedBy=multi-user.target\n')
 print('Service file written')
 
+# Install pip packages
+os.system('pip3 install -r requirements.txt')
+
 # Enable service
 os.system('systemctl enable docker-rolling-updates.service')
 
